@@ -1,5 +1,12 @@
 package net.projecteuler
 
+object Calculus {
+  def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
+
+  def sumOfDigits(x: BigInt) = x.toString.map(BigInt(_)).reduceLeft(_ + _)
+
+}
+
 object Fibonacci {
 	
   def fib(n: Int) = {

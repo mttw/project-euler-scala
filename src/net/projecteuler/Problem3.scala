@@ -2,7 +2,7 @@ package net.projecteuler
 
 import Fibonacci._
 
-object Problem2 extends Application {
+object Problem3 extends Application {
 
   def isEven(x: Int) = (x % 2 == 0)
 
