@@ -1,6 +1,6 @@
 package net.projecteuler
 
-import Calculus.sumOfDigits
+
 
 object Problem13 extends Application {
 

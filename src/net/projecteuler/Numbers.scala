@@ -1,10 +1,16 @@
 package net.projecteuler
 
 object Calculus {
-  def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
+  def sum(xs: Seq[Int]): Int = (0 /: xs) (_ + _)
 
-  def sumOfDigits(x: BigInt) = x.toString.map(BigInt(_)).reduceLeft(_ + _)
+  def sumOfDigits(x: BigInt) = 
+	  x.toString.map((x: Char) => BigInt(x.toString)).foldLeft(BigInt(0))(_ + _)
 
+  def factorial(n: BigInt): BigInt = 
+	  if(n > 1) n * factorial(n-1) 
+	  else if(n == 1) 1 
+	  else throw new IllegalArgumentException("Factorial argument must be > 0, is " + n);
+	  
 }
 
 object Fibonacci {
