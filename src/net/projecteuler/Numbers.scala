@@ -13,6 +13,24 @@ object Calculus {
 	  
 }
 
+object Sieve {
+
+  private def bigints(n: BigInt): Stream[BigInt] = Stream.cons(n, bigints(n+1))
+
+//  private def primeStream(nums: Stream[BigInt]): Stream[BigInt] =
+//    Stream.cons(nums.head, primeStream ((nums tail) filter (x => x % nums.head != 0)) )
+
+  def primeStream: Stream[BigInt] = {
+    def primeStream1(nums: Stream[BigInt]): Stream[BigInt] =
+      Stream.cons(nums.head, primeStream1 ((nums tail) filter (x => x % nums.head != 0)) )
+
+    primeStream1(bigints(2))
+  }
+
+  def primes(n: Int) = primeStream take n toList
+}
+
+
 object Fibonacci {
 	
   def fib(n: Int) = {
