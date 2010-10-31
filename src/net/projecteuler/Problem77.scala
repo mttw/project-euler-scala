@@ -9,7 +9,7 @@ object Problem77 extends Application {
   val PRIMES = primeStream takeWhile(_ <= limit) toIndexedSeq
   
   def isPrime(n: Int) = PRIMES contains n
-
+  
   def ints(n: Int): Stream[Int] = Stream.cons(n, ints(n+1))
   def ints(): Stream[Int] = ints(1)
 
