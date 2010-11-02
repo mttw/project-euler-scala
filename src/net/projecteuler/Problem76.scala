@@ -1,6 +1,6 @@
 package net.projecteuler
 
-import scala.collection.mutable.HashMap
+import Partition.partition
 
 object Problem76 extends Application {
 
@@ -15,14 +15,10 @@ object Problem76 extends Application {
   }  
   
   
-  def solve(n: Int): BigInt = {
-    val numOfSums = new HashMap[Int, BigInt]
-    
-    for(i <- 1 until n; j <- i until n+1) {
-      numOfSums += j -> (numOfSums.getOrElse(j-i, BigInt(1)) + numOfSums.getOrElse(j, BigInt(0)))
-    }
-    numOfSums(n)
-  }
+  /**
+   * See Integer Partition (http://en.wikipedia.org/wiki/Integer_partition)
+   */
+  def solve(n: Int): BigInt = partition(n) - 1
   
   val n = 100
   printf("There are %s different ways to write %d as " +
