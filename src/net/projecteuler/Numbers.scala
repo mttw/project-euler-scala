@@ -44,9 +44,17 @@ object Calculus {
   def sum(xs: Seq[Int]): Int = (0 /: xs) (_ + _)
   def sum(xs: Seq[BigInt]): BigInt = (BigInt(0) /: xs) (_ + _)
 
+  def product(xs: Seq[Int]): Int = (0 /: xs) (_ * _)
+  def product(xs: Seq[BigInt]): BigInt = (BigInt(0) /: xs) (_ * _)
+
+  def digits(x: BigInt) = x.toString.size
+
   def sumOfDigits(x: BigInt) = 
 	  x.toString.map((x: Char) => BigInt(x.toString)).foldLeft(BigInt(0))(_ + _)
 
+  def productOfDigits(x: BigInt) = 
+    x.toString.map((x: Char) => BigInt(x.toString)).foldLeft(BigInt(1))(_ * _)
+	  
   def factorial(n: BigInt): BigInt = 
 	  if(n > 1) n * factorial(n-1) 
 	  else if(n == 1) 1 
@@ -90,6 +98,15 @@ object Fibonacci {
 	  }
 	  fibListTR(limit, List(1, 0)).reverse
   }
+
+  def fibonaccis(): Stream[BigInt] = {
+    def fibonaccisTR(prev: BigInt, current: BigInt): Stream[BigInt] = {
+      val next = prev + current
+      Stream.cons(next, fibonaccisTR(current, next))
+    }
+    Stream.cons(0, Stream.cons(1, fibonaccisTR(0, 1))) 
+  }
+  
   
 }
 
