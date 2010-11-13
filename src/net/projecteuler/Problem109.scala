@@ -13,7 +13,7 @@ object Problem109 extends Application {
   class DartScore(s: ScoreType, region: Int) extends Ordered[DartScore] {
     def value() = (s.id + 1) * region
     def s(): ScoreType = s
-    override def toString() = s.toString + region.toString
+    override def toString() = s.toString + region.toString + "(" + value + ")"
     
     override def compare(that: DartScore): Int = 
       if(value != that.value) value.compare(that.value)
@@ -63,16 +63,14 @@ object Problem109 extends Application {
     allSingleCheckoutsForScore(score) ++ allDoubleCheckoutsForScore(score) ++ allTripleCheckoutsForScore(score)
   
 //  val n = 6
-//  println(allSingleCheckoutsForScore(n))
-//  println(allDoubleCheckoutsForScore(n))
-//  println(allTripleCheckoutsForScore(n))
-//  println
-//  println(allCheckoutsForScore(n))
+//  allCheckoutsForScore(n) foreach println
 //  println(allCheckoutsForScore(n).size)
 
-  val checkouts = (1 until 101).map(allCheckoutsForScore(_).size)
-  println(sum(checkouts))
+  val n = 100
+  val checkouts = (1 until n).map(allCheckoutsForScore(_).size)
+  val solution = sum(checkouts)
   
-  // 38463 is wrong
+  printf("There are %d distinct ways a player can checkout with a score less than %d.\n", solution, n)
+  
   
 }
