@@ -1,9 +1,73 @@
 package net.projecteuler
 
+object Rational {
+  def apply(n: BigInt, d: BigInt = 1) = new Rational(n, d)
+}
+
+class Rational(n: BigInt, d: BigInt = 1) extends Ordered[Rational] {
+//  private def gcd(x: Int, y: Int): Int = {
+//    if (x == 0) y
+//    else if (x < 0) gcd(-x, y)
+//    else if (y < 0) -gcd(x, -y)
+//    else gcd(y % x, x)
+//  }
+  private val g = n.gcd(d)
+  
+  val numer: BigInt = n/g
+  val denom: BigInt = d/g
+
+  def toBigInt() = n/d
+  
+  def +(that: Rational) =
+    new Rational(numer * that.denom + that.numer * denom,
+      denom * that.denom)
+  def -(that: Rational) =
+    new Rational(numer * that.denom - that.numer * denom,
+      denom * that.denom)
+  def *(that: Rational) =
+    new Rational(numer * that.numer, denom * that.denom)
+  def /(that: Rational) =
+    new Rational(numer * that.denom, denom * that.numer)
+  
+  override def toString(): String =  numer.toString + (if(denom != 1) "/" + denom else "");
+  override def compare(that: Rational): Int =  (numer*that.denom).compare(that.numer*denom)
+
+}
+
+
+object Binomial {
+  import Calculus.factorial
+  import Calculus.product
+  
+  def binomialCoefficient(n:Int, k:Int) = factorial(n) / (factorial(k) * factorial(n-k))
+  def binCoeff(n: Int, k: Int): BigInt = product(for(i <- n-k+1 until n+1) yield BigInt(i)) / factorial(k) 
+
+}
 
 object Numbers {
   def bigints(n: BigInt): Stream[BigInt] = Stream.cons(n, bigints(n+1))
   def ints(n: Int): Stream[Int] = Stream.cons(n, ints(n+1))
+  
+  def abs(x: Rational) = if(x.numer*x.denom >= 0) x else new Rational(0) - x
+
+  def isqrt(x: BigInt): BigInt = {
+    val xd = new Rational(x, 1)
+    def square(a: Rational) =  a*a
+    def sqrtIter(guess: Rational): BigInt =
+      if (isGoodEnough(guess)) guess.toBigInt
+      else sqrtIter(improve(guess))
+    def improve(guess: Rational) = {
+//      println(guess)
+      val i = (guess + xd / guess) / new Rational(2)
+      println(">" + i)
+      i
+      }
+    def isGoodEnough(guess: Rational) =
+      abs(square(guess) - xd) < new Rational(1)
+      
+    sqrtIter(new Rational(1))
+  }
+  
 }
 
 object Partition {
@@ -44,8 +108,8 @@ object Calculus {
   def sum(xs: Seq[Int]): Int = (0 /: xs) (_ + _)
   def sum(xs: Seq[BigInt]): BigInt = (BigInt(0) /: xs) (_ + _)
 
-  def product(xs: Seq[Int]): Int = (0 /: xs) (_ * _)
-  def product(xs: Seq[BigInt]): BigInt = (BigInt(0) /: xs) (_ * _)
+  def product(xs: Seq[Int]): Int = (1 /: xs) (_ * _)
+  def product(xs: Seq[BigInt]): BigInt = (BigInt(1) /: xs) (_ * _)
 
   def digits(x: BigInt) = x.toString.size
 
@@ -57,13 +121,26 @@ object Calculus {
 	  
   def factorial(n: BigInt): BigInt = 
 	  if(n > 1) n * factorial(n-1) 
-	  else if(n == 1) 1 
-	  else throw new IllegalArgumentException("Factorial argument must be > 0, is " + n);
-	  
+	  else 1 
 }
 
 object Sieve {
 
+  
+  def primes2(n: Int): List[Int] = {
+          def nomults(s: Int, xs: Seq[Int]): List[Int] = (for (x <- xs if x % s != 0) yield x).toList
+          def sieve(xs: List[Int]): List[Int] = {
+                  if (xs.isEmpty) xs
+                  else {
+                          val p = xs.first
+                          val nxs = nomults(p, xs drop 1)
+                          p :: sieve(nxs)
+                  }
+          }
+  
+          val odds = nomults(2, 2 to n)
+          2 :: sieve(odds)
+  }
   
 
 //  private def primeStream(nums: Stream[BigInt]): Stream[BigInt] =
