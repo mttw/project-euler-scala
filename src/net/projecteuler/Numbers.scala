@@ -1,5 +1,7 @@
 package net.projecteuler
 
+import java.math.{MathContext=>jMC}
+
 object Rational {
   def apply(n: BigInt, d: BigInt = 1) = new Rational(n, d)
 }
@@ -48,25 +50,21 @@ object Numbers {
   def bigints(n: BigInt): Stream[BigInt] = Stream.cons(n, bigints(n+1))
   def ints(n: Int): Stream[Int] = Stream.cons(n, ints(n+1))
   
-  def abs(x: Rational) = if(x.numer*x.denom >= 0) x else new Rational(0) - x
+  def abs(x: Rational): Rational = if(x.numer*x.denom >= 0) x else new Rational(0) - x
+  def abs(x: BigDecimal): BigDecimal = x.abs
 
   def isqrt(x: BigInt): BigInt = {
-    val xd = new Rational(x, 1)
-    def square(a: Rational) =  a*a
-    def sqrtIter(guess: Rational): BigInt =
+    val xd = BigDecimal(x, jMC.DECIMAL128)
+    def square(a: BigDecimal) =  a*a
+    def sqrtIter(guess: BigDecimal): BigInt =
       if (isGoodEnough(guess)) guess.toBigInt
       else sqrtIter(improve(guess))
-    def improve(guess: Rational) = {
-//      println(guess)
-      val i = (guess + xd / guess) / new Rational(2)
-      println(">" + i)
-      i
-      }
-    def isGoodEnough(guess: Rational) =
-      abs(square(guess) - xd) < new Rational(1)
+    def improve(guess: BigDecimal): BigDecimal = (guess + xd / guess) / 2
+    def isGoodEnough(guess: BigDecimal) = abs(square(guess) - xd) < 1
       
-    sqrtIter(new Rational(1))
+    sqrtIter(BigDecimal(1, jMC.DECIMAL128))
   }
+  
   
 }
 
@@ -124,37 +122,6 @@ object Calculus {
 	  else 1 
 }
 
-object Sieve {
-
-  
-  def primes2(n: Int): List[Int] = {
-          def nomults(s: Int, xs: Seq[Int]): List[Int] = (for (x <- xs if x % s != 0) yield x).toList
-          def sieve(xs: List[Int]): List[Int] = {
-                  if (xs.isEmpty) xs
-                  else {
-                          val p = xs.first
-                          val nxs = nomults(p, xs drop 1)
-                          p :: sieve(nxs)
-                  }
-          }
-  
-          val odds = nomults(2, 2 to n)
-          2 :: sieve(odds)
-  }
-  
-
-//  private def primeStream(nums: Stream[BigInt]): Stream[BigInt] =
-//    Stream.cons(nums.head, primeStream ((nums tail) filter (x => x % nums.head != 0)) )
-
-  def primeStream: Stream[BigInt] = {
-    def primeStream1(nums: Stream[BigInt]): Stream[BigInt] =
-      Stream.cons(nums.head, primeStream1 ((nums tail) filter (x => x % nums.head != 0)) )
-
-    primeStream1(Numbers.bigints(2))
-  }
-
-  def primes(n: Int) = primeStream take n toList
-}
 
 
 object Fibonacci {
