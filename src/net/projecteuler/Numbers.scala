@@ -20,6 +20,8 @@ class Rational(n: BigInt, d: BigInt = 1) extends Ordered[Rational] {
 
   def toBigInt() = n/d
   
+  def toDouble() = n.toDouble/d.toDouble
+  
   def +(that: Rational) =
     new Rational(numer * that.denom + that.numer * denom,
       denom * that.denom)
