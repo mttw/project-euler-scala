@@ -50,11 +50,15 @@ object Binomial {
 
 object Numbers {
   def bigints(n: BigInt): Stream[BigInt] = Stream.cons(n, bigints(n+1))
+  def bigints(n: BigInt, limit: BigInt): Stream[BigInt] = if(n+1==limit) Stream.cons(n, Stream.empty) else Stream.cons(n, bigints(n+1, limit))
+
   def ints(n: Int): Stream[Int] = Stream.cons(n, ints(n+1))
   
   def abs(x: Rational): Rational = if(x.numer*x.denom >= 0) x else new Rational(0) - x
   def abs(x: BigDecimal): BigDecimal = x.abs
 
+  def isSquare(n: BigInt) = (isqrt(n).pow(2) == n)
+  
   def isqrt(x: BigInt): BigInt = {
     val xd = BigDecimal(x, jMC.DECIMAL128)
     def square(a: BigDecimal) =  a*a
@@ -111,6 +115,11 @@ object Calculus {
   def product(xs: Seq[Int]): Int = (1 /: xs) (_ * _)
   def product(xs: Seq[BigInt]): BigInt = (BigInt(1) /: xs) (_ * _)
 
+  def toDigitList(x: BigInt) = x.toString.map((x: Char) => x.toString.toInt)
+    
+  def digitsToBigInt(vs: Seq[Int]) = 
+	BigInt(vs.map(_.toString).foldLeft("")(_+_))
+  
   def digits(x: BigInt) = x.toString.size
 
   def sumOfDigits(x: BigInt) = 
