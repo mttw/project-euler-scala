@@ -5,7 +5,7 @@ import scala.collection.immutable.NumericRange
 import Numbers.{bigints, isqrt, isSquare}
 import Calculus.{toDigitList, digitsToBigInt}
 
-object Problem206 extends Application {
+object Problem206 {
 
 	def padDigits(vs: Seq[Int], len: Int) = 
 		(for(i <- 0 until (len - vs.size)) yield 0) ++ vs
@@ -22,10 +22,7 @@ object Problem206 extends Application {
 		var maxDiff = 0
 		for((nd, td) <- nDigits.reverse.zip(template.reverse)) {
 		  if(i%2 == 0 && nd != td) maxDiff = i/2 
-		  if(i%2 == 0 && nd > td) {
-		 	  b += BigInt(10).pow((i/2))
-		 	  
-		  }
+		  if(i%2 == 0 && nd > td) b += BigInt(10).pow((i/2))
 		  i += 1
 		}
 		
@@ -44,15 +41,13 @@ object Problem206 extends Application {
 		while(true) {
 		  val nsq = n*n
 		  val fixed = fix2(nsq)
-		  if(isSquare(fixed)) {
-		 	  return isqrt(fixed)
-		  }
-		  n = isqrt(fixed)
-		  if(n*n <= nsq) n = isqrt(nsq)+1
+		  if(isSquare(fixed)) return isqrt(fixed)
+		  n = if(n*n > nsq) isqrt(fixed) else isqrt(nsq)+1
 		}
     	throw new IllegalArgumentException("unreachable")
     }
 	
-
-	printf("The unique positive integer whose square has the form 1_2_3_4_5_6_7_8_9_0 is %d\n", solve)
+    def main(args: Array[String]) {
+    	printf("The unique positive integer whose square has the form 1_2_3_4_5_6_7_8_9_0 is %d\n", solve)
+    }
 }
