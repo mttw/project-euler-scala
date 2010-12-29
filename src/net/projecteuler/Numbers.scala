@@ -7,21 +7,21 @@ object Rational {
 }
 
 class Rational(n: BigInt, d: BigInt = 1) extends Ordered[Rational] {
-//  private def gcd(x: Int, y: Int): Int = {
-//    if (x == 0) y
-//    else if (x < 0) gcd(-x, y)
-//    else if (y < 0) -gcd(x, -y)
-//    else gcd(y % x, x)
-//  }
   private val g = n.gcd(d)
   
-  val numer: BigInt = n/g
-  val denom: BigInt = d/g
+  val numer: BigInt = (n/g)*(if(d<0) -1 else 1)
+  val denom: BigInt = (d/g).abs
 
   def toBigInt() = n/d
-  
+
+  def toInt() = toBigInt.toInt
+
+  def isInteger() = (denom == 1)
+
   def toDouble() = n.toDouble/d.toDouble
-  
+
+  def invert = Rational(1)/this
+
   def +(that: Rational) =
     new Rational(numer * that.denom + that.numer * denom,
       denom * that.denom)
@@ -35,7 +35,12 @@ class Rational(n: BigInt, d: BigInt = 1) extends Ordered[Rational] {
   
   override def toString(): String =  numer.toString + (if(denom != 1) "/" + denom else "");
   override def compare(that: Rational): Int =  (numer*that.denom).compare(that.numer*denom)
+  override def equals(obj: Any) = obj match {
+    case r: Rational => (numer==r.numer) && (denom==r.denom)
+    case _ => false
+  }
 
+  override def hashCode = numer.hashCode * denom.hashCode
 }
 
 
